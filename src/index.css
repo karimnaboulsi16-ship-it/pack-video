@@ -52,7 +52,4 @@ iframe, video {
   contain: layout style paint;
 }
 
-section {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 800px;
-}
+/* content-visibility removed on section to guarantee exact anchor & CTA scroll offsets */
