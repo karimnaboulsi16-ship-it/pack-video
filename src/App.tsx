@@ -419,15 +419,15 @@ const handleScrollToOffer = (e: any) => {
             _jsx('div', { className: 'pre-headline', children: '🔥 +250.000 VÍDEOS VIRAIS — PRONTOS PARA POSTAR' }),
             _jsx(ViewerCounterBadge, { paused: e }),
             _jsxs('h1', {
-              className: 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.18] max-w-5xl mx-auto mb-3 sm:mb-4',
+              className: 'font-black text-white tracking-tight max-w-5xl mx-auto mb-3 sm:mb-4',
               children: [
-                'Você sabia que pode ganhar de ',
-                _jsx('span', { className: 'inline-block bg-amber-400/15 border border-amber-400/50 text-amber-300 px-2 py-0.5 rounded-lg animate-pulse font-extrabold shadow-[0_0_20px_rgba(251,191,36,0.3)]', children: 'R$ 5.000' }),
+                'Ganhe de ',
+                _jsx('span', { className: 'inline-block whitespace-nowrap bg-amber-400/15 border border-amber-400/50 text-amber-300 px-1.5 sm:px-2 py-0 sm:py-0.5 rounded-lg animate-pulse font-extrabold shadow-[0_0_20px_rgba(251,191,36,0.3)]', children: 'R$ 5.000' }),
                 ' a ',
-                _jsx('span', { className: 'inline-block bg-amber-400/15 border border-amber-400/50 text-amber-300 px-2 py-0.5 rounded-lg animate-pulse font-extrabold shadow-[0_0_20px_rgba(251,191,36,0.3)]', children: 'R$ 30.000' }),
-                ' reais por mês simplesmente postando vídeos na internet, ',
-                _jsx('span', { className: 'bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500 bg-clip-text text-transparent underline decoration-amber-400/50 underline-offset-8', children: 'sem mostrar o seu rosto' }),
-                '?'
+                _jsx('span', { className: 'inline-block whitespace-nowrap bg-amber-400/15 border border-amber-400/50 text-amber-300 px-1.5 sm:px-2 py-0 sm:py-0.5 rounded-lg animate-pulse font-extrabold shadow-[0_0_20px_rgba(251,191,36,0.3)]', children: 'R$ 30.000' }),
+                ' por mês postando vídeos ',
+                _jsx('span', { className: 'bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500 bg-clip-text text-transparent underline decoration-amber-400/50 underline-offset-4 sm:underline-offset-8', children: 'sem mostrar o rosto' }),
+                '!'
               ]
             }),
             _jsx('p', { className: 'text-base sm:text-lg md:text-xl font-bold text-amber-300 tracking-wide mb-6', children: 'Assista como eu e mais de 100 mil pessoas estamos vivendo da internet sem aparecer' }),
