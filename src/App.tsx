@@ -439,9 +439,8 @@ const handleScrollToOffer = (e: any) => {
             })
           ]
         })
-      }),_jsx(`section`,{className:`bg-black py-16 border-t border-white/5`,children:_jsxs(`div`,{className:`container mx-auto px-4 max-w-4xl fade-in`,children:[
-  _jsx(`div`,{className:`inline-flex items-center justify-center gap-1.5 bg-[#10A37F]/15 border border-[#10A37F]/40 text-[#10A37F] text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider mb-4 mx-auto shadow-md shadow-[#10A37F]/10`,children:`🤖 A maior IA do mundo não mente, veja isso!`}),
-  _jsxs(`h2`,{className:`text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight mb-4 text-center`,children:[
+      }),_jsx(`section`,{className:`bg-black py-16 border-t border-white/5`,children:_jsxs(`div`,{className:`container mx-auto px-4 max-w-3xl`,children:[
+  _jsxs(`h2`,{className:`!text-2xl sm:!text-3xl lg:!text-4xl font-black text-white tracking-tight !leading-[1.2] !mb-4 text-center`,children:[
     `Como você vai `,
     _jsx(`span`,{className:`bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500 bg-clip-text text-transparent`,children:`ganhar dinheiro de verdade`}),
     ` apenas postando esses vídeos`
@@ -453,6 +452,33 @@ const handleScrollToOffer = (e: any) => {
     _jsx(`strong`,{className:`text-amber-300`,children:`de graça para milhares de pessoas`}),
     `.`
   ]}),
+  _jsxs(`div`,{className:`space-y-3 mb-8 max-w-2xl mx-auto`,children:[
+    _jsxs(`div`,{className:`bg-[#121318] border border-white/10 rounded-xl px-4 py-3.5 flex items-start gap-3 text-left`,children:[
+      _jsx(`span`,{className:`text-lg leading-none shrink-0 mt-0.5`,children:`💰`}),
+      _jsxs(`p`,{className:`text-xs sm:text-sm text-gray-300 leading-relaxed m-0`,children:[
+        _jsx(`strong`,{className:`text-white`,children:`Fundos de Criadores:`}),
+        ` Pagamentos mensais em dólares do TikTok e YouTube apenas pelas visualizações dos seus vídeos.`
+      ]})
+    ]}),
+    _jsxs(`div`,{className:`bg-[#121318] border border-white/10 rounded-xl px-4 py-3.5 flex items-start gap-3 text-left`,children:[
+      _jsx(`span`,{className:`text-lg leading-none shrink-0 mt-0.5`,children:`🔗`}),
+      _jsxs(`p`,{className:`text-xs sm:text-sm text-gray-300 leading-relaxed m-0`,children:[
+        _jsx(`strong`,{className:`text-white`,children:`Vendas como Afiliado:`}),
+        ` Você coloca um link na sua biografia (Hotmart, Amazon) e ganha comissões automáticas.`
+      ]})
+    ]}),
+    _jsxs(`div`,{className:`bg-[#121318] border border-white/10 rounded-xl px-4 py-3.5 flex items-start gap-3 text-left`,children:[
+      _jsx(`span`,{className:`text-lg leading-none shrink-0 mt-0.5`,children:`🎯`}),
+      _jsxs(`p`,{className:`text-xs sm:text-sm text-gray-300 leading-relaxed m-0`,children:[
+        _jsx(`strong`,{className:`text-white`,children:`100% Pelo Seu Celular:`}),
+        ` Sem mostrar o seu rosto, sem gravar nada e sem experiência prévia.`
+      ]})
+    ]})
+  ]}),
+  _jsxs(`h3`,{className:`!text-xl sm:!text-2xl font-black text-white tracking-tight !leading-snug !mb-4 text-center max-w-2xl !mx-auto`,children:[
+    `A maior prova de que isso é real: `,
+    _jsx(`span`,{className:`text-[#10A37F]`,children:`a maior inteligência artificial do mundo não mente!`})
+  ]}),
   _jsxs(`div`,{className:`bg-[#171821] border border-white/10 rounded-2xl overflow-hidden shadow-2xl max-w-2xl mx-auto`,children:[
     _jsxs(`div`,{className:`bg-[#212330] px-5 py-3.5 border-b border-white/10 flex items-center justify-between`,children:[
       _jsxs(`div`,{className:`flex items-center gap-2.5`,children:[
@@ -461,7 +487,7 @@ const handleScrollToOffer = (e: any) => {
         _jsx(`span`,{className:`text-[11px] font-semibold px-2 py-0.5 rounded bg-white/10 text-gray-300`,children:`GPT-4o`})
       ]}),
       _jsxs(`div`,{className:`flex items-center gap-2 text-xs text-emerald-400 font-medium`,children:[
-        _jsx(`span`,{className:`w-2 h-2 rounded-full bg-emerald-400 animate-pulse`}),
+        _jsx(`span`,{className:`w-2 h-2 rounded-full bg-emerald-400`}),
         `Verificado`
       ]})
     ]}),
@@ -501,33 +527,6 @@ const handleScrollToOffer = (e: any) => {
       ]})
     ]})
   ]})
-]})}),_jsx(`section`,{id:`influenciadores`,className:`py-16 sm:py-20 bg-black/40 border-y border-white/5`,children:_jsxs(`div`,{className:`container max-w-2xl mx-auto px-4 fade-in`,children:[
-  _jsx(`h2`,{
-    className:`text-center text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight max-w-4xl mx-auto mb-10 leading-tight`,
-    children: `⭐ Os maiores influencers ricos também começaram assim, então você também pode chegar lá com constância e dedicação!`
-  }),
-  _jsx(`div`,{
-    className:`flex flex-col gap-6 items-center`,
-    children: [
-      { src: `/assets/aistudio/cortesdocasimitooficial_35bb57e5.webp`, alt: `Cortes do Casimito`, w: 850, h: 191 },
-      { src: `/assets/aistudio/felipeneto_36edccb7.webp`, alt: `Felipe Neto`, w: 850, h: 177 },
-      { src: `/assets/aistudio/alanzoka_672967bb.webp`, alt: `Alanzoka`, w: 850, h: 191 },
-      { src: `/assets/aistudio/loudcoringa_7f784fad.webp`, alt: `LOUD Coringa`, w: 850, h: 191 },
-      { src: `/assets/aistudio/nobrutv_9dc29cf5.webp`, alt: `Nobru`, w: 850, h: 191 }
-    ].map((item, idx) => _jsx(`div`,{
-      key: idx,
-      className:`w-full rounded-2xl overflow-hidden shadow-2xl`,
-      children: _jsx(`img`,{
-        src: item.src,
-        alt: item.alt,
-        width: item.w,
-        height: item.h,
-        className:`w-full h-auto object-cover select-none block rounded-2xl`,
-        loading:`lazy`,
-        decoding:`async`
-      })
-    }))
-  })
 ]})}),_jsx(`section`,{id:`provas-sociais`,className:`bg-alt`,children:_jsxs(`div`,{className:`container fade-in`,children:[_jsxs(`h2`,{className:`text-center text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] max-w-4xl mx-auto mb-10`,children:[`🔥 Mais de`,` `,_jsx(`span`,{className:`bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-400 bg-clip-text text-transparent`,children:`100.000 pessoas`}),` `,`já estão ganhando dinheiro na internet graças aos vídeos virais. Veja abaixo! ⬇️`]}),_jsxs(`div`,{children:[_jsx(`div`,{className:`review-carousel`,children:_jsx(`div`,{className:`review-track`,children:[...PROOF_PRINTS, ...PROOF_PRINTS].map((item, idx)=>_jsxs(`div`,{key:idx,className:`relative shrink-0 group cursor-pointer`,onClick:()=>openModalWithImg(item.src),title:`Clique para ampliar print`,children:[_jsx(`img`,{src:item.src,alt:item.alt,className:`review-img select-none`,loading:`lazy`,decoding:`async`}),_jsxs(`div`,{className:`absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-black/85 backdrop-blur-sm border border-[#00FF44]/50 text-[#00FF44] text-xs font-bold px-2.5 py-1 rounded-full pointer-events-none flex items-center gap-1.5 shadow-lg`,children:[_jsx(`span`,{children:`🔍`}),`Clique para ampliar`]})]}))})}),_jsx(`p`,{className:`text-center text-xs sm:text-sm text-gray-400 mt-3 font-medium`,children:`👆 Toque em qualquer print para ampliar e ver o resultado detalhado`})]})]})}),_jsx(`section`,{children:_jsxs(`div`,{className:`container fade-in`,children:[_jsx(`h2`,{className:`text-center`,children:`Veja a qualidade dos vídeos`}),_jsxs(`div`,{className:`grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6`,children:[_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster1.jpg`,'data-src':`/videos/preview1.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster2.jpg`,'data-src':`/videos/preview2.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster3.jpg`,'data-src':`/videos/preview3.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster4.jpg`,'data-src':`/videos/preview4.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster5.jpg`,'data-src':`/videos/preview5.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster6.jpg`,'data-src':`/videos/preview6.mp4`})})]}),_jsx(`div`,{className:`text-center`,style:{marginTop:`40px`},children:_jsx(`a`,{href:`#${OFFER_PRIMARY_ELEMENT_ID}`,onClick:handleScrollToOffer,className:`btn btn-green`,children:`ACESSAR AGORA O PACK`})})]})}),_jsx(`section`,{className:`bg-black relative py-6 sm:py-8 border-y border-white/10`,children:_jsx(`div`,{className:`container fade-in relative z-10`,children:_jsx(`div`,{className:`max-w-2xl mx-auto px-4`,children:_jsxs(`blockquote`,{className:`m-0 p-0`,children:[_jsx(`p`,{className:`text-lg sm:text-xl md:text-2xl font-bold text-white text-center leading-snug sm:leading-normal m-0 tracking-tight`,children:`“Se você não encontrar uma forma de ganhar dinheiro enquanto dorme, trabalhará até o dia em que morrer.”`}),_jsx(`div`,{className:`flex justify-end items-center mt-2 pr-1 sm:pr-2`,children:_jsx(`cite`,{className:`not-italic text-sm sm:text-base font-semibold text-white/90 italic tracking-wide`,children:`— Warren Buffett`})})]})})})}),_jsx(`section`,{children:_jsxs(`div`,{className:`container fade-in`,children:[_jsx(`h2`,{className:`text-center`,children:`+50 nichos organizados por pastas`}),_jsxs(`div`,{className:`niche-grid`,children:[_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho1.webp`,width:1376,height:768,alt:`Carros de Luxo`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`CARROS DE LUXO`})]}),_jsx(`p`,{className:`niche-desc`,children:`Cenas de supercarros ultra virais para criar um perfil de sucesso em qualquer rede social.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho2.webp`,width:1376,height:768,alt:`Fitness`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`FITNESS`})]}),_jsx(`p`,{className:`niche-desc`,children:`Vídeos de academia, treinos pesados e estilo de vida fitness prontos para postar.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho3.webp`,width:1376,height:768,alt:`Motivação`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`MOTIVAÇÃO`})]}),_jsx(`p`,{className:`niche-desc`,children:`Clipes motivacionais com frases e cenas de impacto que geram milhares de compartilhamentos.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho4.webp`,width:1376,height:768,alt:`Filmes e Séries`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`FILMES E SÉRIES`})]}),_jsx(`p`,{className:`niche-desc`,children:`Um dos melhores nichos para viralizar e obter resultados rápidos.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho5.webp`,width:1376,height:768,alt:`Aesthetic & Luxo`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`AESTHETIC & LUXO`})]}),_jsx(`p`,{className:`niche-desc`,children:`Conteúdo de estilo de vida luxuoso e estético que o algoritmo ama entregar.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho6.webp`,width:1376,height:768,alt:`Natureza`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`NATUREZA`})]}),_jsx(`p`,{className:`niche-desc`,children:`Cenas relaxantes e visualmente impressionantes de paisagens e natureza.`})]})]}),_jsxs(`div`,{className:`niche-extra-block`,children:[_jsx(`h3`,{className:`niche-extra-title`,children:_jsx(`em`,{children:`E dezenas de outras coleções...`})}),_jsxs(`p`,{className:`niche-extra-desc`,children:[`O pack completo inclui `,_jsx(`strong`,{className:`text-neon`,children:`+250.000 Vídeos`}),` divididos em mais de 50 categorias para cobrir absolutamente qualquer nicho ou estilo de conteúdo.`]})]})]})}),
 _jsx(`section`, {
   className: `bg-black py-16`,
