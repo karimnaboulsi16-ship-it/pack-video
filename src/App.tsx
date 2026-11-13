@@ -436,6 +436,83 @@ const handleScrollToOffer = (e: any) => {
             _jsx('div', {
               className: 'text-center mt-8 mb-4',
               children: _jsx('h3', { className: 'text-xl sm:text-2xl md:text-3xl font-black text-amber-300 tracking-tight', children: 'Mais de 50 nichos organizados para começar a ganhar dinheiro ainda esta semana' })
+            }),
+            _jsxs('div', {
+              className: 'mt-10 max-w-2xl mx-auto text-center',
+              children: [
+                _jsxs('h3', {
+                  className: '!text-lg sm:!text-xl md:!text-2xl font-black text-white tracking-tight !leading-snug !mb-5 text-center',
+                  children: [
+                    'Contas que começaram do 0 postando cortes sem aparecer e hoje faturam mais de ',
+                    _jsx('span', { className: 'text-amber-300', children: '100 mil dólares/mês' })
+                  ]
+                }),
+                _jsxs('div', {
+                  className: 'flex flex-col gap-3 sm:gap-4',
+                  children: [
+                    _jsx('div', {
+                      className: 'rounded-xl overflow-hidden border border-white/15 bg-white shadow-xl',
+                      children: _jsx('img', {
+                        src: '/assets/aistudio/Imagem_do_ChatGPT_13_de_nov._de_2026__12_46_03_efd54cab.jpg',
+                        width: 850,
+                        height: 225,
+                        alt: 'Perfil Movieclips sem aparecer com 6.7M de seguidores',
+                        loading: 'lazy',
+                        decoding: 'async',
+                        className: 'w-full h-auto block'
+                      })
+                    }),
+                    _jsx('div', {
+                      className: 'rounded-xl overflow-hidden border border-white/15 bg-white shadow-xl',
+                      children: _jsx('img', {
+                        src: '/assets/aistudio/Imagem_do_ChatGPT_13_de_nov._de_2026__12_46_00_57f1889a.jpg',
+                        width: 850,
+                        height: 205,
+                        alt: 'Perfil Aquela Cena sem aparecer com 3.6M de seguidores',
+                        loading: 'lazy',
+                        decoding: 'async',
+                        className: 'w-full h-auto block'
+                      })
+                    }),
+                    _jsx('div', {
+                      className: 'rounded-xl overflow-hidden border border-white/15 bg-white shadow-xl',
+                      children: _jsx('img', {
+                        src: '/assets/aistudio/Imagem_do_ChatGPT_13_de_nov._de_2026__12_45_58_598cf113.jpg',
+                        width: 850,
+                        height: 225,
+                        alt: 'Perfil The Chosen Brasil sem aparecer com 1M de seguidores',
+                        loading: 'lazy',
+                        decoding: 'async',
+                        className: 'w-full h-auto block'
+                      })
+                    }),
+                    _jsx('div', {
+                      className: 'rounded-xl overflow-hidden border border-white/15 bg-white shadow-xl',
+                      children: _jsx('img', {
+                        src: '/assets/aistudio/Imagem_do_ChatGPT_13_de_nov._de_2026__12_45_54_e40e3e81.jpg',
+                        width: 850,
+                        height: 225,
+                        alt: 'Perfil Las FrutiNovelas 2 sem aparecer com 1.7M de seguidores',
+                        loading: 'lazy',
+                        decoding: 'async',
+                        className: 'w-full h-auto block'
+                      })
+                    })
+                  ]
+                }),
+                _jsx('div', {
+                  className: 'mt-4 flex justify-center',
+                  children: _jsxs('div', {
+                    className: 'relative inline-block bg-white text-black text-xs sm:text-sm font-medium italic px-4 py-2.5 rounded-2xl rounded-tl-sm shadow-lg border border-black/10 max-w-xl text-left',
+                    children: [
+                      _jsx('span', { className: 'not-italic mr-1.5', children: '💬' }),
+                      '“Cada dia que ',
+                      _jsx('strong', { className: 'font-extrabold not-italic text-black', children: 'VOCÊ' }),
+                      ' passa adiando, é um dia mais longe da sua riqueza!”'
+                    ]
+                  })
+                })
+              ]
             })
           ]
         })
