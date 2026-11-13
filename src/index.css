@@ -38,13 +38,22 @@
 }
 
 
-/* Hardware acceleration and smooth playback optimizations */
+/* Hardware acceleration without excessive GPU texture allocation for all videos */
 iframe, video {
-  backface-visibility: hidden !important;
-  -webkit-backface-visibility: hidden !important;
-  transform: translateZ(0) !important;
-  -webkit-transform: translateZ(0) !important;
-  will-change: transform !important;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Pause background infinite animations while roulette modal is open */
+.roulette-open .carousel-track,
+.roulette-open .review-track,
+.roulette-open .btn-pulse-green,
+.roulette-open .animate-ping,
+.roulette-open .animate-pulse,
+.roulette-open .animate-bounce {
+  animation-play-state: paused !important;
 }
 
 /* GPU rendering isolation for page performance */

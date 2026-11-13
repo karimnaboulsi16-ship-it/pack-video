@@ -45,3 +45,15 @@ export function getWinnerSlice(): RouletteSlice {
   if (!winner) throw new Error('Winner slice not defined');
   return winner;
 }
+
+export function buildRouletteTickOffsets(durationSec = 5.0, tickCount = 28): number[] {
+  const offsets: number[] = [];
+  for (let idx = 0; idx < tickCount; idx++) {
+    const progress = idx / Math.max(1, tickCount - 1);
+    // Ease-out timing curve matching cubic-bezier wheel deceleration
+    const time = Number((Math.pow(progress, 2.2) * (durationSec - 0.15)).toFixed(3));
+    offsets.push(time);
+  }
+  return offsets;
+}
+

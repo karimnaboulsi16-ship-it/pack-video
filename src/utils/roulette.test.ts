@@ -5,6 +5,7 @@ import {
   computeViewerFluctuation,
   computeWinningRotation,
   getWinnerSlice,
+  buildRouletteTickOffsets,
   ROULETTE_SLICES
 } from './roulette';
 
@@ -49,3 +50,14 @@ test('computeWinningRotation calculates spin degrees targeting 85% discount', ()
   const rotationWithJitter = computeWinningRotation(8.5, 2);
   assert.equal(rotationWithJitter, 3062);
 });
+
+test('buildRouletteTickOffsets produces strictly non-decreasing decelerating tick offsets', () => {
+  const ticks = buildRouletteTickOffsets(5.0, 28);
+  assert.equal(ticks.length, 28);
+  assert.equal(ticks[0], 0);
+  assert.ok(ticks[ticks.length - 1] < 5.0);
+  for (let i = 1; i < ticks.length; i++) {
+    assert.ok(ticks[i] >= ticks[i - 1]);
+  }
+});
+
