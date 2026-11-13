@@ -61,4 +61,24 @@ iframe, video {
   contain: layout style paint;
 }
 
-/* content-visibility removed on section to guarantee exact anchor & CTA scroll offsets */
+@keyframes float-cloud-1 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes float-cloud-2 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes float-cloud-3 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+.floating-cloud-1 {
+  animation: float-cloud-1 4s ease-in-out infinite;
+}
+.floating-cloud-2 {
+  animation: float-cloud-2 5s ease-in-out infinite;
+}
+.floating-cloud-3 {
+  animation: float-cloud-3 4.5s ease-in-out infinite;
+}

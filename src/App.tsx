@@ -407,7 +407,113 @@ const handleScrollToOffer = (e: any) => {
               ]
             }),
             _jsx('p', { className: 'text-base sm:text-lg md:text-xl font-bold text-amber-300 tracking-wide mb-6', children: 'Assista como eu e mais de 100 mil pessoas estamos vivendo da internet sem aparecer' }),
-            _jsx('div', { className: 'max-w-[300px] sm:max-w-[340px] mx-auto mb-6 relative', children: _jsx(VslPlayer, { deferIframe: e }) }),
+            _jsxs('div', {
+              className: 'max-w-[300px] sm:max-w-[340px] mx-auto mb-6 relative',
+              children: [
+                _jsxs('div', {
+                  className: 'hidden lg:block absolute -left-[280px] top-6 w-[260px] bg-[#171821] border border-[#58D4F2]/40 rounded-2xl p-4 shadow-[0_10px_30px_rgba(88,212,242,0.15)] text-left z-20 floating-cloud-1 select-none pointer-events-none',
+                  children: [
+                    _jsxs('div', {
+                      className: 'text-white text-xs sm:text-sm font-bold flex items-center gap-2 mb-1.5',
+                      children: [
+                        _jsx('span', { className: 'w-6 h-6 rounded-full bg-[#58D4F2]/20 text-[#58D4F2] flex items-center justify-center text-xs font-black shrink-0', children: '💬' }),
+                        'Vou ter suporte até monetizar?'
+                      ]
+                    }),
+                    _jsx('p', {
+                      className: 'text-[#58D4F2] text-xs sm:text-[13px] font-medium leading-relaxed pl-8',
+                      children: 'Sim, 30 dias de suporte até a sua monetização!'
+                    })
+                  ]
+                }),
+                _jsxs('div', {
+                  className: 'hidden lg:block absolute -right-[280px] top-2 w-[260px] bg-[#171821] border border-[#58D4F2]/40 rounded-2xl p-4 shadow-[0_10px_30px_rgba(88,212,242,0.15)] text-left z-20 floating-cloud-2 select-none pointer-events-none',
+                  children: [
+                    _jsxs('div', {
+                      className: 'text-white text-xs sm:text-sm font-bold flex items-center gap-2 mb-1.5',
+                      children: [
+                        _jsx('span', { className: 'w-6 h-6 rounded-full bg-[#58D4F2]/20 text-[#58D4F2] flex items-center justify-center text-xs font-black shrink-0', children: '⚖️' }),
+                        'Os vídeos têm copyright?'
+                      ]
+                    }),
+                    _jsx('p', {
+                      className: 'text-[#58D4F2] text-xs sm:text-[13px] font-medium leading-relaxed pl-8',
+                      children: 'Não têm! Cada cliente recebe vídeos diferentes justamente para não ter problemas com viralização e monetização.'
+                    })
+                  ]
+                }),
+                _jsxs('div', {
+                  className: 'hidden lg:block absolute -right-[280px] bottom-8 w-[260px] bg-[#171821] border border-[#58D4F2]/40 rounded-2xl p-4 shadow-[0_10px_30px_rgba(88,212,242,0.15)] text-left z-20 floating-cloud-3 select-none pointer-events-none',
+                  children: [
+                    _jsxs('div', {
+                      className: 'text-white text-xs sm:text-sm font-bold flex items-center gap-2 mb-1.5',
+                      children: [
+                        _jsx('span', { className: 'w-6 h-6 rounded-full bg-[#58D4F2]/20 text-[#58D4F2] flex items-center justify-center text-xs font-black shrink-0', children: '🎬' }),
+                        'De onde vêm os vídeos?'
+                      ]
+                    }),
+                    _jsx('p', {
+                      className: 'text-[#58D4F2] text-xs sm:text-[13px] font-medium leading-relaxed pl-8',
+                      children: 'Temos um time com mais de 10 pessoas criando 50 mil cortes por dia.'
+                    })
+                  ]
+                }),
+                _jsxs('div', {
+                  className: 'block lg:hidden mt-3 mb-3 space-y-2 px-1',
+                  children: [
+                    _jsxs('div', {
+                      className: 'bg-[#171821] border border-[#58D4F2]/40 rounded-xl p-3 shadow-md text-left',
+                      children: [
+                        _jsxs('div', {
+                          className: 'text-white text-xs font-bold flex items-center gap-1.5 mb-0.5',
+                          children: [
+                            _jsx('span', { className: 'w-5 h-5 rounded-full bg-[#58D4F2]/20 text-[#58D4F2] flex items-center justify-center text-[10px] font-black shrink-0', children: '💬' }),
+                            'Vou ter suporte até monetizar?'
+                          ]
+                        }),
+                        _jsx('p', {
+                          className: 'text-[#58D4F2] text-xs font-medium leading-snug pl-6',
+                          children: 'Sim, 30 dias de suporte até a sua monetização!'
+                        })
+                      ]
+                    }),
+                    _jsxs('div', {
+                      className: 'bg-[#171821] border border-[#58D4F2]/40 rounded-xl p-3 shadow-md text-left',
+                      children: [
+                        _jsxs('div', {
+                          className: 'text-white text-xs font-bold flex items-center gap-1.5 mb-0.5',
+                          children: [
+                            _jsx('span', { className: 'w-5 h-5 rounded-full bg-[#58D4F2]/20 text-[#58D4F2] flex items-center justify-center text-[10px] font-black shrink-0', children: '⚖️' }),
+                            'Os vídeos têm copyright?'
+                          ]
+                        }),
+                        _jsx('p', {
+                          className: 'text-[#58D4F2] text-xs font-medium leading-snug pl-6',
+                          children: 'Não têm! Cada cliente recebe vídeos diferentes justamente para não ter problemas com viralização e monetização.'
+                        })
+                      ]
+                    }),
+                    _jsxs('div', {
+                      className: 'bg-[#171821] border border-[#58D4F2]/40 rounded-xl p-3 shadow-md text-left',
+                      children: [
+                        _jsxs('div', {
+                          className: 'text-white text-xs font-bold flex items-center gap-1.5 mb-0.5',
+                          children: [
+                            _jsx('span', { className: 'w-5 h-5 rounded-full bg-[#58D4F2]/20 text-[#58D4F2] flex items-center justify-center text-[10px] font-black shrink-0', children: '🎬' }),
+                            'De onde vêm os vídeos?'
+                          ]
+                        }),
+                        _jsx('p', {
+                          className: 'text-[#58D4F2] text-xs font-medium leading-snug pl-6',
+                          children: 'Temos um time com mais de 10 pessoas criando 50 mil cortes por dia.'
+                        })
+                      ]
+                    })
+                  ]
+                }),
+                _jsx(VslPlayer, { deferIframe: e })
+              ]
+            }),
             _jsx('div', {
               className: 'my-6 max-w-md mx-auto px-4 flex flex-col items-center justify-center',
               children: _jsx('a', {
