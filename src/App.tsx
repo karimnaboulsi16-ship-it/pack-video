@@ -529,10 +529,12 @@ const handleScrollToOffer = (e: any) => {
                 className: 'carousel-track',
                 children: [
                   _jsx('video', { 'data-src': '/videos/preview1.mp4', poster: '/videos/poster1.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
+                  _jsx('video', { src: '/assets/aistudio/ssstik.io_1794532852943_04634da2.mp4', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'auto', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview2.mp4', poster: '/videos/poster2.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview3.mp4', poster: '/videos/poster3.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview4.mp4', poster: '/videos/poster4.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview1.mp4', poster: '/videos/poster1.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
+                  _jsx('video', { src: '/assets/aistudio/ssstik.io_1794532852943_04634da2.mp4', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'auto', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview2.mp4', poster: '/videos/poster2.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview3.mp4', poster: '/videos/poster3.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview4.mp4', poster: '/videos/poster4.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true })
