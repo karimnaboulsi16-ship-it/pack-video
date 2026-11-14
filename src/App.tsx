@@ -137,50 +137,17 @@ const _Fragment = React.Fragment;
 
 const VslPlayer = React.memo(function VslPlayer({ deferIframe = false }: { deferIframe?: boolean }) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const hasTriggeredRef = useRef<boolean>(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Send command to the YouTube IFrame API safely
-  const sendCommand = (func: string, args: any[] = []) => {
-    if (!iframeRef.current || !iframeRef.current.contentWindow) return;
-    try {
-      iframeRef.current.contentWindow.postMessage(
-        JSON.stringify({ event: 'command', func, args }),
-        '*'
-      );
-    } catch (err) {}
-  };
-
-  // Listen for iframe readiness or player state events
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
+  const handlePlay = (ev?: React.MouseEvent | React.KeyboardEvent) => {
+    if (ev) {
       try {
-        if (typeof event.data === 'string') {
-          const data = JSON.parse(event.data);
-          if (data.event === 'infoDelivery' && data.info) {
-            if (data.info.playerState === 1) { // 1 = playing
-              setIsPlaying(true);
-            }
-          }
-        }
-      } catch (e) {}
-    };
-
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
-
-  // Single-touch instant play: synchronous commands directly in the user gesture tick
-  const handlePlay = (e: React.MouseEvent | React.TouchEvent) => {
-    if (e) {
-      try {
-        e.stopPropagation();
+        ev.stopPropagation();
       } catch (err) {}
     }
 
-    if (hasTriggeredRef.current) return;
-    hasTriggeredRef.current = true;
-    setIsPlaying(true);
+    const vid = videoRef.current;
+    if (!vid) return;
 
     // Warm audio hardware context for iOS Safari directly inside interaction event
     try {
@@ -193,17 +160,34 @@ const VslPlayer = React.memo(function VslPlayer({ deferIframe = false }: { defer
       }
     } catch (err) {}
 
-    // Send unMute, seekTo(0), and playVideo synchronously without ANY delays or remounting
-    sendCommand('unMute');
-    sendCommand('setVolume', [100]);
-    sendCommand('seekTo', [0, true]);
-    sendCommand('playVideo');
+    vid.muted = false;
+    vid.defaultMuted = false;
+    vid.volume = 1;
+    try {
+      vid.currentTime = 0;
+    } catch (err) {}
 
-    // Fast backup tick in case iframe was just completing initial handshake
-    setTimeout(() => {
-      sendCommand('unMute');
-      sendCommand('playVideo');
-    }, 150);
+    const playPromise = vid.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(() => {
+          vid.muted = true;
+          vid.play()
+            .then(() => {
+              vid.muted = false;
+              vid.volume = 1;
+              setIsPlaying(true);
+            })
+            .catch(() => {
+              setIsPlaying(true);
+            });
+        });
+    } else {
+      setIsPlaying(true);
+    }
   };
 
   return (
@@ -211,44 +195,38 @@ const VslPlayer = React.memo(function VslPlayer({ deferIframe = false }: { defer
       className="aspect-[9/16] w-full rounded-2xl overflow-hidden border-2 border-[#CCFF00]/60 shadow-[0_0_50px_rgba(204,255,0,0.35)] bg-black relative select-none"
       style={{ WebkitTransform: 'translate3d(0,0,0)', transform: 'translate3d(0,0,0)' }}
     >
-      {/* 
-        Single persistent iframe mounted once roulette modal closes so YouTube JS does not compete with roulette frame rate.
-      */}
-      {!deferIframe && (
-        <iframe
-          ref={iframeRef}
-          src="https://www.youtube-nocookie.com/embed/Pm7LPpta5lk?autoplay=0&mute=0&controls=1&playsinline=1&webkit-playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=https://localhost"
-          title="Viral Pack Pro VSL"
-          className="absolute inset-0 w-full h-full border-0 pointer-events-auto rounded-2xl"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          loading="lazy"
-        />
-      )}
+      <video
+        ref={videoRef}
+        data-vsl="true"
+        poster="/assets/aistudio/vsl_poster.jpg"
+        playsInline
+        preload={deferIframe ? 'none' : 'metadata'}
+        controls={isPlaying}
+        controlsList="nodownload"
+        className="w-full h-full object-cover rounded-2xl bg-black"
+      >
+        <source src="/assets/aistudio/vsl_main.mp4" type="video/mp4" />
+      </video>
 
-      {/* Overlay Cover: Disappears immediately on the first touch */}
       {!isPlaying && (
-        <div
+        <button
+          type="button"
           onClick={handlePlay}
-          onTouchEnd={handlePlay}
-          role="button"
-          tabIndex={0}
-          aria-label="Assistir ao vídeo agora com áudio"
-          className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-gradient-to-b from-black/85 via-black/75 to-black/95 cursor-pointer group transition-opacity duration-300 p-4 text-center select-none"
+          aria-label="Começar vídeo e liberar o som"
+          className="absolute inset-0 z-30 w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-black/60 via-black/50 to-black/80 cursor-pointer group transition-opacity duration-300 p-5 text-center select-none border-0"
         >
-          <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#CCFF00]/30 via-transparent to-transparent pointer-events-none" />
-          <div className="relative z-10 bg-[#CCFF00] hover:bg-[#bbf000] text-black font-black w-20 h-20 rounded-full shadow-[0_0_40px_rgba(204,255,0,0.8)] flex items-center justify-center animate-bounce transition-transform group-hover:scale-110 mb-4 pointer-events-none">
-            <span className="text-3xl ml-1">▶</span>
-          </div>
-          <div className="relative z-10 bg-[#121318]/95 border border-[#CCFF00]/60 px-5 py-3 rounded-2xl shadow-xl pointer-events-none">
-            <div className="text-[#CCFF00] font-black text-xs uppercase tracking-wider mb-1 flex items-center justify-center gap-1.5">
-              <span>🔊</span> Ativar Som
-            </div>
-            <p className="text-white text-xs sm:text-sm font-bold leading-snug">
-              Toque para assistir ao vídeo imediatamente do início
-            </p>
-          </div>
-        </div>
+          <div className="absolute inset-0 opacity-45 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#CCFF00]/25 via-transparent to-transparent pointer-events-none" />
+          <span className="relative z-10 inline-flex items-center justify-center gap-2.5 bg-[#CCFF00] group-hover:bg-[#bbf000] group-active:scale-95 text-black font-black text-base sm:text-lg uppercase tracking-wider px-8 py-4 rounded-full shadow-[0_0_35px_rgba(204,255,0,0.8)] transition-all duration-200 group-hover:scale-105 animate-pulse">
+            <span className="text-xl leading-none">▶</span>
+            <span>Começar</span>
+          </span>
+          <span className="relative z-10 mt-3.5 inline-flex items-center gap-1.5 bg-black/85 border border-[#CCFF00]/50 px-4 py-1.5 rounded-full shadow-lg">
+            <span className="text-sm">🔊</span>
+            <span className="text-white text-xs sm:text-sm font-bold tracking-wide">
+              Aumente o volume
+            </span>
+          </span>
+        </button>
       )}
     </div>
   );
@@ -299,7 +277,7 @@ const handleScrollToOffer = (e: any) => {
   }, []);
 
   useEffect(() => {
-    const videos = Array.from(document.querySelectorAll('video')) as HTMLVideoElement[];
+    const videos = Array.from(document.querySelectorAll('video:not([data-vsl="true"])')) as HTMLVideoElement[];
     videos.forEach((vid) => {
       vid.muted = true;
       vid.defaultMuted = true;
