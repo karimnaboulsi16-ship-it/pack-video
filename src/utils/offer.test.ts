@@ -9,17 +9,26 @@ import {
   hasScrollTargetDrifted,
 } from './offer';
 
-test('EXTRA_BONUS_CARDS includes both requested bonuses', () => {
+test('EXTRA_BONUS_CARDS includes all requested bonuses in BRL', () => {
   const titles = EXTRA_BONUS_CARDS.map((b) => b.title);
+  assert.ok(titles.includes('Atualizações Semanais de Novos Vídeos'));
   assert.ok(titles.includes("Vídeos sem marca d'água e sem copyright"));
   assert.ok(titles.includes('Suporte exclusivo com especialista até viralizar'));
-  assert.equal(EXTRA_BONUS_CARDS.length, 2);
+  assert.ok(titles.includes('Aprenda a vender como afiliado'));
+  assert.ok(titles.includes('Aprenda a vender e usar legendas/hashtags certas'));
+  assert.equal(EXTRA_BONUS_CARDS.length, 5);
+  for (const card of EXTRA_BONUS_CARDS) {
+    assert.ok(card.oldValueLabel.includes('R$'));
+    assert.ok(!card.oldValueLabel.includes('USD'));
+  }
 });
 
-test('EXTRA_CHECKLIST_BONUSES includes both requested offer items', () => {
+test('EXTRA_CHECKLIST_BONUSES includes all requested offer items', () => {
   assert.deepEqual(EXTRA_CHECKLIST_BONUSES, [
     "Vídeos sem marca d'água e sem copyright",
     'Suporte exclusivo com especialista até monetizar',
+    'Aprenda a vender como afiliado',
+    'Aprenda a vender e usar legendas/hashtags certas',
   ]);
 });
 

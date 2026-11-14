@@ -8,17 +8,38 @@ export interface OfferBonusCard {
 
 export const EXTRA_BONUS_CARDS: OfferBonusCard[] = [
   {
-    id: 'no-watermark-copyright',
+    id: 'weekly-updates',
     badge: 'BÔNUS #06',
+    title: 'Atualizações Semanais de Novos Vídeos',
+    oldValueLabel: 'Valor: R$ 57,00',
+    freeLabel: '✓ 100% GRÁTIS',
+  },
+  {
+    id: 'no-watermark-copyright',
+    badge: 'BÔNUS #07',
     title: "Vídeos sem marca d'água e sem copyright",
-    oldValueLabel: 'Valor: $47 USD',
+    oldValueLabel: 'Valor: R$ 97,00',
     freeLabel: '✓ 100% GRÁTIS',
   },
   {
     id: 'exclusive-specialist-support',
-    badge: 'BÔNUS #07',
+    badge: 'BÔNUS #08',
     title: 'Suporte exclusivo com especialista até viralizar',
-    oldValueLabel: 'Valor: $97 USD',
+    oldValueLabel: 'Valor: R$ 147,00',
+    freeLabel: '✓ 100% GRÁTIS',
+  },
+  {
+    id: 'sell-as-affiliate',
+    badge: 'BÔNUS #09',
+    title: 'Aprenda a vender como afiliado',
+    oldValueLabel: 'Valor: R$ 97,00',
+    freeLabel: '✓ 100% GRÁTIS',
+  },
+  {
+    id: 'captions-and-hashtags',
+    badge: 'BÔNUS #10',
+    title: 'Aprenda a vender e usar legendas/hashtags certas',
+    oldValueLabel: 'Valor: R$ 67,00',
     freeLabel: '✓ 100% GRÁTIS',
   },
 ];
@@ -26,6 +47,8 @@ export const EXTRA_BONUS_CARDS: OfferBonusCard[] = [
 export const EXTRA_CHECKLIST_BONUSES: string[] = [
   "Vídeos sem marca d'água e sem copyright",
   'Suporte exclusivo com especialista até monetizar',
+  'Aprenda a vender como afiliado',
+  'Aprenda a vender e usar legendas/hashtags certas',
 ];
 
 export const OFFER_PRIMARY_ELEMENT_ID = 'oferta-principal';
