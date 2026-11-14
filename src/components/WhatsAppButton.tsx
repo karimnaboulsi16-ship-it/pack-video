@@ -9,7 +9,7 @@ export const WhatsAppButton = React.memo(function WhatsAppButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Alguma dúvida? Falar no WhatsApp"
-      className="fixed bottom-20 right-5 z-[1000] inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] active:scale-95 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.5)] hover:shadow-[0_6px_28px_rgba(37,211,102,0.75)] transition-all duration-200 whitespace-nowrap select-none"
+      className="fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-[1000] inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] active:scale-95 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.5)] hover:shadow-[0_6px_28px_rgba(37,211,102,0.75)] transition-all duration-200 whitespace-nowrap select-none"
     >
       <svg
         viewBox="0 0 32 32"
