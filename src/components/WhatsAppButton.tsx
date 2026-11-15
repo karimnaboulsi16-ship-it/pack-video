@@ -1,6 +1,7 @@
 import React from 'react';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 
-const WHATSAPP_URL = 'https://wa.me/5515996788845';
+const WHATSAPP_URL = buildWhatsAppUrl();
 
 export const WhatsAppButton = React.memo(function WhatsAppButton() {
   return (

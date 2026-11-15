@@ -17,6 +17,13 @@ import {
   scrollToOfferSection
 } from './utils/offer';
 import { preserveTrackingParams } from './utils/tracking';
+import {
+  isCarouselItemInView,
+  isRectNearViewport,
+  prepareMutedInlineVideo,
+  safePauseVideo,
+  safePlayMutedVideo
+} from './utils/videoManager';
 
 const E = [
   {
@@ -53,23 +60,33 @@ const E = [
 const PROOF_PRINTS = [
   {
     src: '/assets/aistudio/15A09D17-3AE4-4038-9C55-9F5608BC69C8_ee0c95bc.webp',
-    alt: 'Resultado Jefferson Santos - R$ 10.842,61 com vídeos virais no YouTube Studio'
+    alt: 'Resultado Jefferson Santos - R$ 10.842,61 com vídeos virais no YouTube Studio',
+    width: 1024,
+    height: 973
   },
   {
     src: '/assets/aistudio/67ABB4DC-AB78-4D1D-AD3A-0A0DBCA83205_b0b9e57a.webp',
-    alt: 'Resultado Poder Digital - € 5.892,85 com vídeos virais no YouTube Studio'
+    alt: 'Resultado Poder Digital - € 5.892,85 com vídeos virais no YouTube Studio',
+    width: 1024,
+    height: 678
   },
   {
     src: '/assets/aistudio/509F30C9-6BA9-48DD-B8E8-AB8FB830A136_c1f64d86.webp',
-    alt: 'Resultado Mentalidade Alfa - US$ 3.421,17 com vídeos virais no YouTube Studio'
+    alt: 'Resultado Mentalidade Alfa - US$ 3.421,17 com vídeos virais no YouTube Studio',
+    width: 1023,
+    height: 819
   },
   {
     src: '/assets/aistudio/6518C8B7-610F-4536-8EEA-63D0440DAAF7_0fb170f3.webp',
-    alt: 'Resultado Império Digital - R$ 8.764,32 com vídeos virais no YouTube Studio'
+    alt: 'Resultado Império Digital - R$ 8.764,32 com vídeos virais no YouTube Studio',
+    width: 1024,
+    height: 987
   },
   {
     src: '/assets/aistudio/C929D58F-F17A-4488-8B26-79CA80C5B0EC_03451255.webp',
-    alt: 'Resultado Trilha Livre - R$ 6.482,15 com vídeos virais no YouTube Studio'
+    alt: 'Resultado Trilha Livre - R$ 6.482,15 com vídeos virais no YouTube Studio',
+    width: 1024,
+    height: 879
   }
 ];
 
@@ -278,42 +295,81 @@ const handleScrollToOffer = (e: any) => {
   }, []);
 
   useEffect(() => {
-    const videos = Array.from(document.querySelectorAll('video:not([data-vsl="true"])')) as HTMLVideoElement[];
-    videos.forEach((vid) => {
-      vid.muted = true;
-      vid.defaultMuted = true;
-      vid.playsInline = true;
-      vid.setAttribute('muted', '');
-      vid.setAttribute('playsinline', '');
-      vid.setAttribute('webkit-playsinline', 'true');
-    });
+    const allVideos = Array.from(document.querySelectorAll('video:not([data-vsl="true"])')) as HTMLVideoElement[];
+    const carouselEl = document.querySelector('.mockup-carousel') as HTMLElement | null;
+    const carouselVideos = carouselEl
+      ? (Array.from(carouselEl.querySelectorAll('video')) as HTMLVideoElement[])
+      : [];
+    const carouselSet = new Set(carouselVideos);
+    const gridVideos = allVideos.filter((vid) => !carouselSet.has(vid));
 
-    // Defer downloading & decoding all MP4 videos until roulette modal closes
+    allVideos.forEach(prepareMutedInlineVideo);
+
+    // Defer downloading & decoding preview MP4 videos until roulette modal closes
     if (e) {
-      videos.forEach((vid) => {
-        if (!vid.paused) vid.pause();
-      });
+      allVideos.forEach(safePauseVideo);
       return;
     }
 
-    const observer = new IntersectionObserver(
+    const onLoadedData = (ev: Event) => {
+      const vid = ev.currentTarget as HTMLVideoElement;
+      if (vid.dataset.wantPlay === '1' && vid.paused && !document.hidden) {
+        safePlayMutedVideo(vid);
+      }
+    };
+    allVideos.forEach((vid) => vid.addEventListener('loadeddata', onLoadedData));
+
+    let carouselVisible = false;
+    let carouselTimer: number | null = null;
+
+    const syncCarouselVideos = () => {
+      if (!carouselEl || !carouselVisible || document.hidden) {
+        carouselVideos.forEach((vid) => {
+          vid.dataset.wantPlay = '0';
+          safePauseVideo(vid);
+        });
+        return;
+      }
+      const containerRect = carouselEl.getBoundingClientRect();
+      carouselVideos.forEach((vid) => {
+        if (isCarouselItemInView(vid.getBoundingClientRect(), containerRect, 180)) {
+          vid.dataset.wantPlay = '1';
+          safePlayMutedVideo(vid);
+        } else {
+          vid.dataset.wantPlay = '0';
+          safePauseVideo(vid);
+        }
+      });
+    };
+
+    const startCarouselSync = () => {
+      syncCarouselVideos();
+      if (carouselTimer === null) {
+        carouselTimer = window.setInterval(syncCarouselVideos, 320);
+      }
+    };
+
+    const stopCarouselSync = () => {
+      if (carouselTimer !== null) {
+        window.clearInterval(carouselTimer);
+        carouselTimer = null;
+      }
+      carouselVideos.forEach((vid) => {
+        vid.dataset.wantPlay = '0';
+        safePauseVideo(vid);
+      });
+    };
+
+    const gridObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const video = entry.target as HTMLVideoElement;
-          if (entry.isIntersecting) {
-            const lazySrc = video.dataset.src;
-            if (!video.getAttribute('src') && lazySrc) {
-              video.src = lazySrc;
-            }
-            video.muted = true;
-            if (video.paused && !document.hidden) {
-              const playPromise = video.play();
-              if (playPromise !== undefined) {
-                playPromise.catch(() => {});
-              }
-            }
-          } else if (!video.paused) {
-            video.pause();
+          if (entry.isIntersecting && !document.hidden) {
+            video.dataset.wantPlay = '1';
+            safePlayMutedVideo(video);
+          } else {
+            video.dataset.wantPlay = '0';
+            safePauseVideo(video);
           }
         });
       },
@@ -322,21 +378,64 @@ const handleScrollToOffer = (e: any) => {
         threshold: 0.01
       }
     );
+    gridVideos.forEach((vid) => gridObserver.observe(vid));
 
-    videos.forEach((vid) => observer.observe(vid));
+    const carouselObserver = carouselEl
+      ? new IntersectionObserver(
+          (entries) => {
+            const isVisible = entries.some((entry) => entry.isIntersecting);
+            carouselVisible = isVisible;
+            if (isVisible && !document.hidden) {
+              startCarouselSync();
+            } else {
+              stopCarouselSync();
+            }
+          },
+          {
+            rootMargin: '220px 0px 220px 0px',
+            threshold: 0.01
+          }
+        )
+      : null;
 
-    const handleVisibilityChange = () => {
+    if (carouselEl && carouselObserver) {
+      carouselObserver.observe(carouselEl);
+    }
+
+    const syncVisibleOnResume = () => {
       if (document.hidden) {
-        videos.forEach((vid) => {
-          if (!vid.paused) vid.pause();
+        stopCarouselSync();
+        gridVideos.forEach((vid) => {
+          vid.dataset.wantPlay = '0';
+          safePauseVideo(vid);
         });
+        return;
       }
+
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      if (carouselEl) {
+        carouselVisible = isRectNearViewport(carouselEl.getBoundingClientRect(), vw, vh, 120, 220);
+        if (carouselVisible) startCarouselSync();
+      }
+      gridVideos.forEach((vid) => {
+        if (isRectNearViewport(vid.getBoundingClientRect(), vw, vh, 120, 220)) {
+          vid.dataset.wantPlay = '1';
+          safePlayMutedVideo(vid);
+        }
+      });
     };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    document.addEventListener('visibilitychange', syncVisibleOnResume);
+    window.addEventListener('pageshow', syncVisibleOnResume);
 
     return () => {
-      observer.disconnect();
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      gridObserver.disconnect();
+      carouselObserver?.disconnect();
+      stopCarouselSync();
+      allVideos.forEach((vid) => vid.removeEventListener('loadeddata', onLoadedData));
+      document.removeEventListener('visibilitychange', syncVisibleOnResume);
+      window.removeEventListener('pageshow', syncVisibleOnResume);
     };
   }, [e]);
 
@@ -527,12 +626,12 @@ const handleScrollToOffer = (e: any) => {
                 className: 'carousel-track',
                 children: [
                   _jsx('video', { 'data-src': '/videos/preview1.mp4', poster: '/videos/poster1.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
-                  _jsx('video', { src: '/assets/aistudio/ssstik.io_1794532852943_04634da2.mp4', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'auto', disablePictureInPicture: true }),
+                  _jsx('video', { 'data-src': '/assets/aistudio/ssstik.io_1794532852943_04634da2.mp4', poster: '/assets/aistudio/ssstik_poster.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview2.mp4', poster: '/videos/poster2.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview3.mp4', poster: '/videos/poster3.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview4.mp4', poster: '/videos/poster4.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview1.mp4', poster: '/videos/poster1.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
-                  _jsx('video', { src: '/assets/aistudio/ssstik.io_1794532852943_04634da2.mp4', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'auto', disablePictureInPicture: true }),
+                  _jsx('video', { 'data-src': '/assets/aistudio/ssstik.io_1794532852943_04634da2.mp4', poster: '/assets/aistudio/ssstik_poster.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview2.mp4', poster: '/videos/poster2.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview3.mp4', poster: '/videos/poster3.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true }),
                   _jsx('video', { 'data-src': '/videos/preview4.mp4', poster: '/videos/poster4.jpg', autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'none', disablePictureInPicture: true })
@@ -710,7 +809,7 @@ const handleScrollToOffer = (e: any) => {
       ]})
     ]})
   ]})
-]})}),_jsx(`section`,{id:`provas-sociais`,className:`bg-alt`,children:_jsxs(`div`,{className:`container fade-in`,children:[_jsxs(`h2`,{className:`text-center text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] max-w-4xl mx-auto mb-10`,children:[`🔥 Mais de`,` `,_jsx(`span`,{className:`bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-400 bg-clip-text text-transparent`,children:`100.000 pessoas`}),` `,`já estão ganhando dinheiro na internet graças aos vídeos virais. Veja abaixo! ⬇️`]}),_jsxs(`div`,{children:[_jsx(`div`,{className:`review-carousel`,children:_jsx(`div`,{className:`review-track`,children:[...PROOF_PRINTS, ...PROOF_PRINTS].map((item, idx)=>_jsxs(`div`,{key:idx,className:`relative shrink-0 group cursor-pointer`,onClick:()=>openModalWithImg(item.src),title:`Clique para ampliar print`,children:[_jsx(`img`,{src:item.src,alt:item.alt,className:`review-img select-none`,loading:`lazy`,decoding:`async`}),_jsxs(`div`,{className:`absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-black/85 backdrop-blur-sm border border-[#00FF44]/50 text-[#00FF44] text-xs font-bold px-2.5 py-1 rounded-full pointer-events-none flex items-center gap-1.5 shadow-lg`,children:[_jsx(`span`,{children:`🔍`}),`Clique para ampliar`]})]}))})}),_jsx(`p`,{className:`text-center text-xs sm:text-sm text-gray-400 mt-3 mb-6 font-medium`,children:`👆 Toque em qualquer print para ampliar e ver o resultado detalhado`}),_jsx(`div`,{className:`review-carousel !mt-4`,children:_jsx(`div`,{className:`review-track hover:[animation-play-state:paused]`,style:{animationDuration:`50s`},children:[...WHATSAPP_TESTIMONIALS, ...WHATSAPP_TESTIMONIALS, ...WHATSAPP_TESTIMONIALS, ...WHATSAPP_TESTIMONIALS].map((item, idx)=>_jsx(`div`,{key:idx,className:`relative shrink-0 select-none cursor-default`,children:_jsx(`img`,{src:item.src,alt:item.alt,className:`w-[320px] sm:w-[400px] md:w-[480px] h-auto rounded-2xl border border-white/10 shadow-lg select-none pointer-events-none bg-[#efeae2]`,loading:`eager`,decoding:`async`})}))})})]})]})}),_jsx(`section`,{children:_jsxs(`div`,{className:`container fade-in`,children:[_jsx(`h2`,{className:`text-center`,children:`Veja a qualidade dos vídeos`}),_jsxs(`div`,{className:`grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6`,children:[_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster1.jpg`,'data-src':`/videos/preview1.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster2.jpg`,'data-src':`/videos/preview2.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster3.jpg`,'data-src':`/videos/preview3.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster4.jpg`,'data-src':`/videos/preview4.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster5.jpg`,'data-src':`/videos/preview5.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster6.jpg`,'data-src':`/videos/preview6.mp4`})})]}),_jsx(`div`,{className:`text-center`,style:{marginTop:`40px`},children:_jsx(`a`,{href:`#${OFFER_PRIMARY_ELEMENT_ID}`,onClick:handleScrollToOffer,className:`btn btn-green btn-pulse-green`,children:`ACESSAR AGORA O PACK`})})]})}),_jsx(`section`,{className:`bg-black relative py-6 sm:py-8 border-y border-white/10`,children:_jsx(`div`,{className:`container fade-in relative z-10`,children:_jsx(`div`,{className:`max-w-2xl mx-auto px-4`,children:_jsxs(`blockquote`,{className:`m-0 p-0`,children:[_jsx(`p`,{className:`text-lg sm:text-xl md:text-2xl font-bold text-white text-center leading-snug sm:leading-normal m-0 tracking-tight`,children:`“Se você não encontrar uma forma de ganhar dinheiro enquanto dorme, trabalhará até o dia em que morrer.”`}),_jsx(`div`,{className:`flex justify-end items-center mt-2 pr-1 sm:pr-2`,children:_jsx(`cite`,{className:`not-italic text-sm sm:text-base font-semibold text-white/90 italic tracking-wide`,children:`— Warren Buffett`})})]})})})}),_jsx(`section`,{children:_jsxs(`div`,{className:`container fade-in`,children:[_jsx(`h2`,{className:`text-center`,children:`+50 nichos organizados por pastas`}),_jsxs(`div`,{className:`niche-grid`,children:[_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho1.webp`,width:1376,height:768,alt:`Carros de Luxo`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`CARROS DE LUXO`})]}),_jsx(`p`,{className:`niche-desc`,children:`Cenas de supercarros ultra virais para criar um perfil de sucesso em qualquer rede social.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho2.webp`,width:1376,height:768,alt:`Fitness`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`FITNESS`})]}),_jsx(`p`,{className:`niche-desc`,children:`Vídeos de academia, treinos pesados e estilo de vida fitness prontos para postar.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho3.webp`,width:1376,height:768,alt:`Motivação`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`MOTIVAÇÃO`})]}),_jsx(`p`,{className:`niche-desc`,children:`Clipes motivacionais com frases e cenas de impacto que geram milhares de compartilhamentos.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho4.webp`,width:1376,height:768,alt:`Filmes e Séries`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`FILMES E SÉRIES`})]}),_jsx(`p`,{className:`niche-desc`,children:`Um dos melhores nichos para viralizar e obter resultados rápidos.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho5.webp`,width:1376,height:768,alt:`Aesthetic & Luxo`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`AESTHETIC & LUXO`})]}),_jsx(`p`,{className:`niche-desc`,children:`Conteúdo de estilo de vida luxuoso e estético que o algoritmo ama entregar.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho6.webp`,width:1376,height:768,alt:`Natureza`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`NATUREZA`})]}),_jsx(`p`,{className:`niche-desc`,children:`Cenas relaxantes e visualmente impressionantes de paisagens e natureza.`})]})]}),_jsxs(`div`,{className:`niche-extra-block`,children:[_jsx(`h3`,{className:`niche-extra-title`,children:_jsx(`em`,{children:`E dezenas de outras coleções...`})}),_jsxs(`p`,{className:`niche-extra-desc`,children:[`O pack completo inclui `,_jsx(`strong`,{className:`text-neon`,children:`+250.000 Vídeos`}),` divididos em mais de 50 categorias para cobrir absolutamente qualquer nicho ou estilo de conteúdo.`]})]})]})}),
+]})}),_jsx(`section`,{id:`provas-sociais`,className:`bg-alt`,children:_jsxs(`div`,{className:`container fade-in`,children:[_jsxs(`h2`,{className:`text-center text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] max-w-4xl mx-auto mb-10`,children:[`🔥 Mais de`,` `,_jsx(`span`,{className:`bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-400 bg-clip-text text-transparent`,children:`100.000 pessoas`}),` `,`já estão ganhando dinheiro na internet graças aos vídeos virais. Veja abaixo! ⬇️`]}),_jsxs(`div`,{children:[_jsx(`div`,{className:`review-carousel`,children:_jsx(`div`,{className:`review-track`,children:[...PROOF_PRINTS, ...PROOF_PRINTS].map((item, idx)=>_jsxs(`div`,{key:idx,className:`relative shrink-0 group cursor-pointer`,onClick:()=>openModalWithImg(item.src),title:`Clique para ampliar print`,children:[_jsx(`img`,{src:item.src,alt:item.alt,width:item.width,height:item.height,className:`review-img select-none`,loading:`eager`,decoding:`async`}),_jsxs(`div`,{className:`absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-black/85 backdrop-blur-sm border border-[#00FF44]/50 text-[#00FF44] text-xs font-bold px-2.5 py-1 rounded-full pointer-events-none flex items-center gap-1.5 shadow-lg`,children:[_jsx(`span`,{children:`🔍`}),`Clique para ampliar`]})]}))})}),_jsx(`p`,{className:`text-center text-xs sm:text-sm text-gray-400 mt-3 mb-6 font-medium`,children:`👆 Toque em qualquer print para ampliar e ver o resultado detalhado`}),_jsx(`div`,{className:`review-carousel !mt-4`,children:_jsx(`div`,{className:`review-track hover:[animation-play-state:paused]`,style:{animationDuration:`50s`},children:[...WHATSAPP_TESTIMONIALS, ...WHATSAPP_TESTIMONIALS, ...WHATSAPP_TESTIMONIALS, ...WHATSAPP_TESTIMONIALS].map((item, idx)=>_jsx(`div`,{key:idx,className:`relative shrink-0 select-none cursor-default`,children:_jsx(`img`,{src:item.src,alt:item.alt,width:820,height:410,className:`w-[320px] sm:w-[400px] md:w-[480px] h-auto rounded-2xl border border-white/10 shadow-lg select-none pointer-events-none bg-[#efeae2]`,loading:`eager`,decoding:`async`})}))})})]})]})}),_jsx(`section`,{children:_jsxs(`div`,{className:`container fade-in`,children:[_jsx(`h2`,{className:`text-center`,children:`Veja a qualidade dos vídeos`}),_jsxs(`div`,{className:`grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6`,children:[_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster1.jpg`,'data-src':`/videos/preview1.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster2.jpg`,'data-src':`/videos/preview2.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster3.jpg`,'data-src':`/videos/preview3.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster4.jpg`,'data-src':`/videos/preview4.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster5.jpg`,'data-src':`/videos/preview5.mp4`})}),_jsx(`div`,{className:`preview-card !min-h-0`,children:_jsx(`video`,{autoPlay:!0,muted:!0,loop:!0,playsInline:!0,preload:`none`,disablePictureInPicture:!0,poster:`/videos/poster6.jpg`,'data-src':`/videos/preview6.mp4`})})]}),_jsx(`div`,{className:`text-center`,style:{marginTop:`40px`},children:_jsx(`a`,{href:`#${OFFER_PRIMARY_ELEMENT_ID}`,onClick:handleScrollToOffer,className:`btn btn-green btn-pulse-green`,children:`ACESSAR AGORA O PACK`})})]})}),_jsx(`section`,{className:`bg-black relative py-6 sm:py-8 border-y border-white/10`,children:_jsx(`div`,{className:`container fade-in relative z-10`,children:_jsx(`div`,{className:`max-w-2xl mx-auto px-4`,children:_jsxs(`blockquote`,{className:`m-0 p-0`,children:[_jsx(`p`,{className:`text-lg sm:text-xl md:text-2xl font-bold text-white text-center leading-snug sm:leading-normal m-0 tracking-tight`,children:`“Se você não encontrar uma forma de ganhar dinheiro enquanto dorme, trabalhará até o dia em que morrer.”`}),_jsx(`div`,{className:`flex justify-end items-center mt-2 pr-1 sm:pr-2`,children:_jsx(`cite`,{className:`not-italic text-sm sm:text-base font-semibold text-white/90 italic tracking-wide`,children:`— Warren Buffett`})})]})})})}),_jsx(`section`,{children:_jsxs(`div`,{className:`container fade-in`,children:[_jsx(`h2`,{className:`text-center`,children:`+50 nichos organizados por pastas`}),_jsxs(`div`,{className:`niche-grid`,children:[_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho1.webp`,width:1376,height:768,alt:`Carros de Luxo`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`CARROS DE LUXO`})]}),_jsx(`p`,{className:`niche-desc`,children:`Cenas de supercarros ultra virais para criar um perfil de sucesso em qualquer rede social.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho2.webp`,width:1376,height:768,alt:`Fitness`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`FITNESS`})]}),_jsx(`p`,{className:`niche-desc`,children:`Vídeos de academia, treinos pesados e estilo de vida fitness prontos para postar.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho3.webp`,width:1376,height:768,alt:`Motivação`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`MOTIVAÇÃO`})]}),_jsx(`p`,{className:`niche-desc`,children:`Clipes motivacionais com frases e cenas de impacto que geram milhares de compartilhamentos.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho4.webp`,width:1376,height:768,alt:`Filmes e Séries`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`FILMES E SÉRIES`})]}),_jsx(`p`,{className:`niche-desc`,children:`Um dos melhores nichos para viralizar e obter resultados rápidos.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho5.webp`,width:1376,height:768,alt:`Aesthetic & Luxo`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`AESTHETIC & LUXO`})]}),_jsx(`p`,{className:`niche-desc`,children:`Conteúdo de estilo de vida luxuoso e estético que o algoritmo ama entregar.`})]}),_jsxs(`div`,{className:`niche-card`,children:[_jsxs(`div`,{className:`niche-img-wrapper`,children:[_jsx(`img`,{src:`/imgs/nicho6.webp`,width:1376,height:768,alt:`Natureza`,loading:`lazy`,decoding:`async`}),_jsx(`div`,{className:`niche-overlay`}),_jsx(`h3`,{className:`niche-title`,children:`NATUREZA`})]}),_jsx(`p`,{className:`niche-desc`,children:`Cenas relaxantes e visualmente impressionantes de paisagens e natureza.`})]})]}),_jsxs(`div`,{className:`niche-extra-block`,children:[_jsx(`h3`,{className:`niche-extra-title`,children:_jsx(`em`,{children:`E dezenas de outras coleções...`})}),_jsxs(`p`,{className:`niche-extra-desc`,children:[`O pack completo inclui `,_jsx(`strong`,{className:`text-neon`,children:`+250.000 Vídeos`}),` divididos em mais de 50 categorias para cobrir absolutamente qualquer nicho ou estilo de conteúdo.`]})]})]})}),
 _jsx(`section`, {
   className: `bg-black py-16`,
   children: _jsxs(`div`, {
