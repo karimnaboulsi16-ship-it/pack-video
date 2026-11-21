@@ -1,16 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { preserveTrackingParams } from './tracking';
+import { getCheckoutLinkTarget, preserveTrackingParams } from './tracking';
 
-const KIRVANO_BASE = 'https://pay.kirvano.com/ddac7633-64ed-4903-8087-052abc044530';
+const CHECKOUT_BASE = 'https://pay.wiapy.com/KwLhGeQR_aVF';
 
 test('preserves UTMs and exact-case fbclid from page query string', () => {
   const result = preserveTrackingParams(
-    KIRVANO_BASE,
+    CHECKOUT_BASE,
     '?utm_source=meta&utm_medium=cpc&utm_campaign=Camp_01&fbclid=IwAR0AbCdEf123XyZ'
   );
   const parsed = new URL(result);
-  assert.equal(parsed.origin + parsed.pathname, KIRVANO_BASE);
+  assert.equal(parsed.origin + parsed.pathname, CHECKOUT_BASE);
   assert.equal(parsed.searchParams.get('utm_source'), 'meta');
   assert.equal(parsed.searchParams.get('utm_medium'), 'cpc');
   assert.equal(parsed.searchParams.get('utm_campaign'), 'Camp_01');
@@ -18,7 +18,7 @@ test('preserves UTMs and exact-case fbclid from page query string', () => {
 });
 
 test('preserves existing LowTrack parameters already attached to targetHref without overwriting', () => {
-  const decoratedByLowtrack = `${KIRVANO_BASE}?click_id=lt_123_abc&utm_source=lowtrack_src`;
+  const decoratedByLowtrack = `${CHECKOUT_BASE}?click_id=lt_123_abc&utm_source=lowtrack_src`;
   const result = preserveTrackingParams(
     decoratedByLowtrack,
     '?utm_source=meta&utm_content=adset2&fbclid=CaseSensitiveID99'
@@ -31,10 +31,28 @@ test('preserves existing LowTrack parameters already attached to targetHref with
 });
 
 test('ignores internal autostart parameter and returns base URL when search is empty', () => {
-  const result = preserveTrackingParams(KIRVANO_BASE, '?autostart=1&utm_term=video1');
+  const result = preserveTrackingParams(CHECKOUT_BASE, '?autostart=1&utm_term=video1');
   const parsed = new URL(result);
   assert.equal(parsed.searchParams.get('autostart'), null);
   assert.equal(parsed.searchParams.get('utm_term'), 'video1');
 
-  assert.equal(preserveTrackingParams(KIRVANO_BASE, ''), KIRVANO_BASE);
+  assert.equal(preserveTrackingParams(CHECKOUT_BASE, ''), CHECKOUT_BASE);
 });
+
+test('uses same-tab navigation on mobile and in-app browsers when top-level, and _blank on desktop or iframes', () => {
+  const iosSafari =
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
+  const instagramIos =
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 Mobile/21F90 Instagram 330.0.0.23.92';
+  const tiktokAndroid =
+    'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/125.0.0.0 Mobile Safari/537.36 BytedanceWebview/d8a21c6';
+  const desktopChrome =
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/125.0.0.0 Safari/537.36';
+
+  assert.equal(getCheckoutLinkTarget(iosSafari, false), undefined);
+  assert.equal(getCheckoutLinkTarget(instagramIos, false), undefined);
+  assert.equal(getCheckoutLinkTarget(tiktokAndroid, false), undefined);
+  assert.equal(getCheckoutLinkTarget(desktopChrome, false), '_blank');
+  assert.equal(getCheckoutLinkTarget(iosSafari, true), '_blank');
+});
+

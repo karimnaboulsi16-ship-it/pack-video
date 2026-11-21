@@ -33,3 +33,32 @@ export function preserveTrackingParams(
     return targetHref;
   }
 }
+
+const MOBILE_OR_IN_APP_UA_RE =
+  /Instagram|FBAN|FBAV|FB_IAB|TikTok|BytedanceWebview|musical_ly|Kwai|WhatsApp|Line\/|iPhone|iPad|iPod|Android|Mobile/i;
+
+export function isInsideIframe(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+}
+
+export function getCheckoutLinkTarget(
+  userAgent?: string,
+  isFramed?: boolean
+): '_blank' | undefined {
+  const framed = isFramed ?? isInsideIframe();
+  if (framed) return '_blank';
+
+  const ua =
+    userAgent ?? (typeof navigator !== 'undefined' ? navigator.userAgent : '');
+  if (ua && MOBILE_OR_IN_APP_UA_RE.test(ua)) {
+    return undefined;
+  }
+
+  return '_blank';
+}
+
