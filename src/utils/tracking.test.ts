@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getCheckoutLinkTarget, preserveTrackingParams } from './tracking';
+import {
+  getCheckoutLinkTarget,
+  isCheckoutHref,
+  preserveTrackingParams,
+  shouldFireBrowserInitiateCheckout
+} from './tracking';
 
 const CHECKOUT_BASE = 'https://pay.wiapy.com/KwLhGeQR_aVF';
 
@@ -55,4 +60,15 @@ test('uses same-tab navigation on mobile and in-app browsers when top-level, and
   assert.equal(getCheckoutLinkTarget(desktopChrome, false), '_blank');
   assert.equal(getCheckoutLinkTarget(iosSafari, true), '_blank');
 });
+
+test('suppresses duplicate browser InitiateCheckout when LowTrack CAPI is loaded and distinguishes checkout URLs', () => {
+  assert.equal(shouldFireBrowserInitiateCheckout({ __ltPixelLoaded: true }), false);
+  assert.equal(shouldFireBrowserInitiateCheckout({ LowTrack: {} }), false);
+  assert.equal(shouldFireBrowserInitiateCheckout({}), true);
+
+  assert.equal(isCheckoutHref(CHECKOUT_BASE), true);
+  assert.equal(isCheckoutHref('#oferta-principal'), false);
+  assert.equal(isCheckoutHref(null), false);
+});
+
 

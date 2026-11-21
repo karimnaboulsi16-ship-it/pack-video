@@ -16,7 +16,7 @@ import {
   OFFER_PRIMARY_ELEMENT_ID,
   scrollToOfferSection
 } from './utils/offer';
-import { getCheckoutLinkTarget, preserveTrackingParams } from './utils/tracking';
+import { getCheckoutLinkTarget, preserveTrackingParams, shouldFireBrowserInitiateCheckout } from './utils/tracking';
 import {
   isCarouselItemInView,
   isRectNearViewport,
@@ -110,6 +110,9 @@ const ye = 'https://pay.wiapy.com/KwLhGeQR_aVF';
 
 
 function we(eventName: string, data?: any) {
+  if (eventName === 'InitiateCheckout' && !shouldFireBrowserInitiateCheckout()) {
+    return;
+  }
   if (typeof window !== 'undefined' && (window as any).fbq) {
     try {
       (window as any).fbq('track', eventName, data);

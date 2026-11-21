@@ -62,3 +62,18 @@ export function getCheckoutLinkTarget(
   return '_blank';
 }
 
+export function isCheckoutHref(href: string | null | undefined): boolean {
+  return typeof href === 'string' && href.includes('pay.wiapy.com');
+}
+
+export function shouldFireBrowserInitiateCheckout(
+  win: { __ltPixelLoaded?: boolean; LowTrack?: unknown } | undefined =
+    typeof window !== 'undefined'
+      ? (window as unknown as { __ltPixelLoaded?: boolean; LowTrack?: unknown })
+      : undefined
+): boolean {
+  if (!win) return false;
+  return !win.__ltPixelLoaded && !win.LowTrack;
+}
+
+

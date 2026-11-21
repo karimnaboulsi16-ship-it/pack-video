@@ -30,16 +30,18 @@
     <!-- Meta Pixel Code -->
     <script>
       !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;var initIds={},pvTracked=false;n=f.fbq=function(){
+      {if(f.fbq)return;var initIds={},pvTracked=false,icTracked=false;n=f.fbq=function(){
       var cmd=arguments[0],arg=arguments[1];
       if(cmd==='init'&&arg){var pid=String(arg);if(initIds[pid])return;initIds[pid]=true;}
       if(cmd==='track'&&arg==='PageView'){if(pvTracked)return;pvTracked=true;}
+      if(cmd==='track'&&arg==='InitiateCheckout'){if(icTracked)return;icTracked=true;}
       n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
       if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
       n.queue=[];t=b.createElement(e);t.async=!0;
       t.src=v;s=b.getElementsByTagName(e)[0];
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('set', 'autoConfig', false, '1428966156115611');
       fbq('init', '1428966156115611');
       fbq('track', 'PageView');
     </script>
@@ -47,6 +49,65 @@
     <!-- End Meta Pixel Code -->
     <!-- Lowtrack Pixel Code -->
     <script>
+      (function () {
+        var allowNextIc = false;
+        var icSent = false;
+        var isCheckoutEl = function (el) {
+          if (!el || el.nodeType !== 1 || !el.closest) return false;
+          var anchor = el.closest('a[href]');
+          if (!anchor) return false;
+          var href = String(anchor.getAttribute('href') || '');
+          return href.indexOf('pay.wiapy.com') !== -1;
+        };
+        var markIntent = function (ev) {
+          var path = typeof ev.composedPath === 'function' ? ev.composedPath() : [];
+          var matched = false;
+          for (var i = 0; i < path.length && i < 10; i++) {
+            if (isCheckoutEl(path[i])) {
+              matched = true;
+              break;
+            }
+          }
+          if (!matched && ev.target) {
+            matched = isCheckoutEl(ev.target);
+          }
+          allowNextIc = matched;
+        };
+        ['pointerdown', 'touchstart', 'mousedown', 'click'].forEach(function (evtName) {
+          document.addEventListener(evtName, markIntent, true);
+        });
+
+        var isLowtrackIcUrl = function (u) {
+          return typeof u === 'string' && u.indexOf('lowtrack.com.br/api/ic') !== -1;
+        };
+
+        if (typeof window.fetch === 'function') {
+          var origFetch = window.fetch.bind(window);
+          window.fetch = function (input, init) {
+            var url = typeof input === 'string' ? input : (input && input.url) || '';
+            if (isLowtrackIcUrl(url)) {
+              if (!allowNextIc || icSent) {
+                return Promise.resolve(new Response(null, { status: 204 }));
+              }
+              icSent = true;
+            }
+            return origFetch(input, init);
+          };
+        }
+
+        if (navigator && typeof navigator.sendBeacon === 'function') {
+          var origBeacon = navigator.sendBeacon.bind(navigator);
+          navigator.sendBeacon = function (url, data) {
+            if (isLowtrackIcUrl(url)) {
+              if (!allowNextIc || icSent) {
+                return true;
+              }
+              icSent = true;
+            }
+            return origBeacon(url, data);
+          };
+        }
+      })();
       window.pixelId = "lt_px_38a0a1878cf1";
       var a = document.createElement("script");
       a.setAttribute("async", "");
